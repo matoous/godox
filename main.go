@@ -29,8 +29,8 @@ func main() {
 	includeTests := *flagIncludeTests
 
 	exitWithError := false
-	for _, arg := range os.Args {
-		messages, err := godox(arg, includeTests)
+	for _, path := range paths {
+		messages, err := godox(path, includeTests)
 		for _, message := range messages {
 			_, _ = fmt.Fprintf(os.Stdout, "%s\n", message)
 			exitWithError = true
