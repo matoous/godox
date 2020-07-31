@@ -25,6 +25,7 @@ func TestParse(t *testing.T) {
 				`fixtures/01/example1.go:25: Line contains TODO/BUG/FIXME: "TODO: Multiline C1 (Line 24)"`,
 				`fixtures/01/example1.go:26: Line contains TODO/BUG/FIXME: "TODO: Multiline C2 (Line 25)"`,
 				`fixtures/01/example1.go:27: Line contains TODO/BUG/FIXME: "FIXME: Your attitude (Line 26)"`,
+				`fixtures/01/example1.go:28: Line contains TODO/BUG/FIXME: "todo тут какой-то очень-очень-очень-очен..."`,
 				`fixtures/01/example2.go:5: Line contains TODO/BUG/FIXME: "TODO: Add JSON tag (Line 4)"`,
 				`fixtures/01/example2.go:6: Line contains TODO/BUG/FIXME: "toDO add more fields (Line 5)"`,
 				`fixtures/01/example2.go:12: Line contains TODO/BUG/FIXME: "TODO: multiline todo 1 (Line 11)"`,

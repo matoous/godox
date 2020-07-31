@@ -25,3 +25,4 @@ func main() {
 //TODO: Multiline C1 (Line 24)
 //TODO: Multiline C2 (Line 25)
 //FIXME: Your attitude (Line 26)
+// todo тут какой-то очень-очень-очень-очень длинный комментарий про utf-8
