@@ -16,3 +16,8 @@ Installation
 ---
 
     go get github.com/matoous/godox
+
+The main idea
+---
+
+The main idea of godox is the keywords like TODO, FIX, OPTIMIZE is temporary and for development purpose only. You should create tasks if some TODOs cannot be fixed in the current merge request.
