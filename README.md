@@ -1,8 +1,8 @@
 GoDoX
 ===
 
-[![Tests](https://github.com/matoous/godox/workflows/.github/workflows/test.yml/badge.svg)](https://github.com/matoous/godox/actions) 
-[![Lint](https://github.com/matoous/godox/workflows/.github/workflows/lint.yml/badge.svg)](https://github.com/matoous/godox/actions) 
+[![Tests](https://github.com/matoous/godox/actions/workflows/test.yml/badge.svg)](https://github.com/matoous/godox/actions/workflows/test.yml) 
+[![Lint](https://github.com/matoous/godox/actions/workflows/lint.yml/badge.svg)](https://github.com/matoous/godox/actions/workflows/lint.yml) 
 [![GoDoc](https://godoc.org/github.com/matoous/godox?status.svg)](https://godoc.org/github.com/matoous/godox)
 [![Go Report Card](https://goreportcard.com/badge/github.com/matoous/godox)](https://goreportcard.com/report/github.com/matoous/godox)
 [![GitHub issues](https://img.shields.io/github/issues/matoous/godox.svg)](https://github.com/matoous/godox/issues)
