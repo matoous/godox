@@ -24,6 +24,7 @@ func getMessages(comment *ast.Comment, fset *token.FileSet, keywords []string) [
 	commentText := extractComment(comment.Text)
 
 	b := bufio.NewReader(bytes.NewBufferString(commentText))
+
 	var comments []Message
 
 	for lineNum := 0; ; lineNum++ {
@@ -31,10 +32,14 @@ func getMessages(comment *ast.Comment, fset *token.FileSet, keywords []string) [
 		if err != nil {
 			break
 		}
+
+		const minimumSize = 4
+
 		sComment := bytes.TrimSpace(line)
-		if len(sComment) < 4 {
+		if len(sComment) < minimumSize {
 			continue
 		}
+
 		for _, kw := range keywords {
 			if lkw := len(kw); !(bytes.EqualFold([]byte(kw), sComment[0:lkw]) &&
 				!hasAlphanumRuneAdjacent(sComment[lkw:])) {
@@ -47,6 +52,7 @@ func getMessages(comment *ast.Comment, fset *token.FileSet, keywords []string) [
 			if len(sComment) > commentLimit {
 				sComment = []byte(fmt.Sprintf("%.40s...", sComment))
 			}
+
 			comments = append(comments, Message{
 				Pos: pos,
 				Message: fmt.Sprintf(
@@ -61,6 +67,7 @@ func getMessages(comment *ast.Comment, fset *token.FileSet, keywords []string) [
 			break
 		}
 	}
+
 	return comments
 }
 
@@ -99,11 +106,14 @@ func Run(file *ast.File, fset *token.FileSet, keywords ...string) []Message {
 	if len(keywords) == 0 {
 		keywords = defaultKeywords
 	}
+
 	var messages []Message
+
 	for _, c := range file.Comments {
 		for _, ci := range c.List {
 			messages = append(messages, getMessages(ci, fset, keywords)...)
 		}
 	}
+
 	return messages
 }
