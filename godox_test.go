@@ -11,11 +11,12 @@ import (
 	"github.com/matoous/godox"
 )
 
-//nolint:funlen this is a unit test
+//nolint: funlen // this is a unit test
 func TestParse(t *testing.T) {
 	t.Parallel()
 
 	flag.Parse()
+
 	tests := []struct {
 		path         string
 		result       []string
@@ -68,8 +69,9 @@ func TestParse(t *testing.T) {
 			path: "./fixtures/04",
 		},
 	}
+
 	for _, tt := range tests {
-		tt := tt //nolint: varnamelen tt is ok on this context
+		tt := tt //nolint: varnamelen // tt is ok on this context
 		t.Run(tt.path, func(t *testing.T) {
 			t.Parallel()
 
@@ -79,12 +81,15 @@ func TestParse(t *testing.T) {
 				if info.IsDir() {
 					return nil
 				}
+
 				f, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
 				if err != nil {
 					panic(err)
 				}
+
 				res := godox.Run(f, fset)
 				messages = append(messages, res...)
+
 				return nil
 			})
 
