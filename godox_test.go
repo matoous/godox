@@ -11,7 +11,7 @@ import (
 	"github.com/matoous/godox"
 )
 
-//nolint: funlen // this is a unit test
+//nolint // reason this is a unit test
 func TestParse(t *testing.T) {
 	t.Parallel()
 
@@ -71,7 +71,7 @@ func TestParse(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt //nolint: varnamelen // tt is ok on this context
+		tt := tt //nolint // reason tt is ok on this context
 		t.Run(tt.path, func(t *testing.T) {
 			t.Parallel()
 
@@ -93,11 +93,14 @@ func TestParse(t *testing.T) {
 				return nil
 			})
 
-			if a, b := len(messages), len(tt.result); b == 0 && a != b {
+			a, b := len(messages), len(tt.result)
+
+			switch {
+			case b == 0 && a != b:
 				t.Errorf("should expect no messages, instead got:\n%q", messages)
-			} else if a > b {
+			case a > b:
 				t.Errorf("should return less messages (got %d, expects %d)", a, b)
-			} else if a < b {
+			case a < b:
 				t.Errorf("should return more messages (got %d, expect %d)", a, b)
 			}
 
