@@ -20,17 +20,8 @@ type Message struct {
 	Message string
 }
 
-func getMessages(c *ast.Comment, fset *token.FileSet, keywords []string) []Message {
-	commentText := c.Text
-	switch commentText[1] {
-	case '/':
-		commentText = commentText[2:]
-		if len(commentText) > 0 && commentText[0] == ' ' {
-			commentText = commentText[1:]
-		}
-	case '*':
-		commentText = commentText[2 : len(commentText)-2]
-	}
+func getMessages(comment *ast.Comment, fset *token.FileSet, keywords []string) []Message {
+	commentText := extractComment(comment.Text)
 
 	b := bufio.NewReader(bytes.NewBufferString(commentText))
 	var comments []Message
@@ -45,28 +36,46 @@ func getMessages(c *ast.Comment, fset *token.FileSet, keywords []string) []Messa
 			continue
 		}
 		for _, kw := range keywords {
-			if lkw := len(kw); bytes.EqualFold([]byte(kw), sComment[0:lkw]) &&
-				!hasAlphanumRuneAdjacent(sComment[lkw:]) {
-				pos := fset.Position(c.Pos())
-				// trim the comment
-				if len(sComment) > 40 {
-					sComment = []byte(fmt.Sprintf("%.40s...", sComment))
-				}
-				comments = append(comments, Message{
-					Pos: pos,
-					Message: fmt.Sprintf(
-						"%s:%d: Line contains %s: \"%s\"",
-						filepath.Join(pos.Filename),
-						pos.Line+lineNum,
-						strings.Join(keywords, "/"),
-						sComment,
-					),
-				})
-				break
+			if lkw := len(kw); !(bytes.EqualFold([]byte(kw), sComment[0:lkw]) &&
+				!hasAlphanumRuneAdjacent(sComment[lkw:])) {
+				continue
 			}
+
+			pos := fset.Position(comment.Pos())
+			// trim the comment
+			const commentLimit = 40
+			if len(sComment) > commentLimit {
+				sComment = []byte(fmt.Sprintf("%.40s...", sComment))
+			}
+			comments = append(comments, Message{
+				Pos: pos,
+				Message: fmt.Sprintf(
+					"%s:%d: Line contains %s: %q",
+					filepath.Clean(pos.Filename),
+					pos.Line+lineNum,
+					strings.Join(keywords, "/"),
+					sComment,
+				),
+			})
+
+			break
 		}
 	}
 	return comments
+}
+
+func extractComment(commentText string) string {
+	switch commentText[1] {
+	case '/':
+		commentText = commentText[2:]
+		if len(commentText) > 0 && commentText[0] == ' ' {
+			commentText = commentText[1:]
+		}
+	case '*':
+		commentText = commentText[2 : len(commentText)-2]
+	}
+
+	return commentText
 }
 
 func hasAlphanumRuneAdjacent(rest []byte) bool {
@@ -74,7 +83,7 @@ func hasAlphanumRuneAdjacent(rest []byte) bool {
 		return false
 	}
 
-	switch rest[0] { //most common cases
+	switch rest[0] { // most common cases
 	case ':', ' ', '(':
 		return false
 	}
