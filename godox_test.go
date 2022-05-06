@@ -13,6 +13,8 @@ import (
 
 //nolint:funlen
 func TestParse(t *testing.T) {
+	t.Parallel()
+
 	flag.Parse()
 	tests := []struct {
 		path         string
@@ -67,8 +69,10 @@ func TestParse(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tt := tt
+		tt := tt //nolint: varnamelen
 		t.Run(tt.path, func(t *testing.T) {
+			t.Parallel()
+
 			var messages []godox.Message
 			_ = filepath.Walk(tt.path, func(path string, info os.FileInfo, _ error) error {
 				fset := token.NewFileSet()
