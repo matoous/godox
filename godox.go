@@ -8,6 +8,8 @@ import (
 	"go/token"
 	"path/filepath"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 )
 
 var (
@@ -45,7 +47,8 @@ func getMessages(c *ast.Comment, fset *token.FileSet, keywords []string) []Messa
 			continue
 		}
 		for _, kw := range keywords {
-			if bytes.EqualFold([]byte(kw), sComment[0:len(kw)]) {
+			if lkw := len(kw); bytes.EqualFold([]byte(kw), sComment[0:lkw]) &&
+				!hasAlphanumRuneAdjacent(sComment[lkw:]) {
 				pos := fset.Position(c.Pos())
 				// trim the comment
 				if len(sComment) > 40 {
@@ -66,6 +69,21 @@ func getMessages(c *ast.Comment, fset *token.FileSet, keywords []string) []Messa
 		}
 	}
 	return comments
+}
+
+func hasAlphanumRuneAdjacent(rest []byte) bool {
+	if len(rest) == 0 {
+		return false
+	}
+
+	switch rest[0] { //most common cases:
+	case ':', ' ', '(':
+		return false
+	}
+
+	r, _ := utf8.DecodeRune(rest)
+
+	return unicode.IsLetter(r) || unicode.IsNumber(r) || unicode.IsDigit(r)
 }
 
 // Run runs the godox linter on given file.
