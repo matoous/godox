@@ -1,4 +1,4 @@
-package godox
+package godox_test
 
 import (
 	"flag"
@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/matoous/godox"
 )
 
 //nolint:funlen
@@ -67,7 +69,7 @@ func TestParse(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.path, func(t *testing.T) {
-			var messages []Message
+			var messages []godox.Message
 			_ = filepath.Walk(tt.path, func(path string, info os.FileInfo, _ error) error {
 				fset := token.NewFileSet()
 				if info.IsDir() {
@@ -77,7 +79,7 @@ func TestParse(t *testing.T) {
 				if err != nil {
 					panic(err)
 				}
-				res := Run(f, fset)
+				res := godox.Run(f, fset)
 				messages = append(messages, res...)
 				return nil
 			})
