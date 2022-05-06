@@ -11,7 +11,7 @@ import (
 	"github.com/matoous/godox"
 )
 
-//nolint:funlen
+//nolint:funlen this is a unit test
 func TestParse(t *testing.T) {
 	t.Parallel()
 
@@ -69,7 +69,7 @@ func TestParse(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tt := tt //nolint: varnamelen
+		tt := tt //nolint: varnamelen tt is ok on this context
 		t.Run(tt.path, func(t *testing.T) {
 			t.Parallel()
 
