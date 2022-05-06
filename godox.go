@@ -12,11 +12,9 @@ import (
 	"unicode/utf8"
 )
 
-var (
-	defaultKeywords = []string{"TODO", "BUG", "FIXME"}
-)
+var defaultKeywords = []string{"TODO", "BUG", "FIXME"}
 
-// Message contains a message and position
+// Message contains a message and position.
 type Message struct {
 	Pos     token.Position
 	Message string
@@ -76,7 +74,7 @@ func hasAlphanumRuneAdjacent(rest []byte) bool {
 		return false
 	}
 
-	switch rest[0] { //most common cases:
+	switch rest[0] { //most common cases
 	case ':', ' ', '(':
 		return false
 	}
