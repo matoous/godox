@@ -18,6 +18,12 @@ func TestParse(t *testing.T) {
 		includeTests bool
 	}{
 		{
+			path: "./fixtures/00",
+			result: []string{
+				`fixtures/00/example1.go:3: Line contains TODO/BUG/FIXME: "TODO"`,
+			},
+		},
+		{
 			path: "./fixtures/01",
 			result: []string{
 				`fixtures/01/example1.go:14: Line contains TODO/BUG/FIXME: "TODO(fix): something (Line 13)"`,
@@ -54,6 +60,9 @@ func TestParse(t *testing.T) {
 				`fixtures/03/main.go:16: Line contains TODO/BUG/FIXME: "FIXME: Mutli line 3"`,
 			},
 		},
+		{
+			path: "./fixtures/04",
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -73,12 +82,12 @@ func TestParse(t *testing.T) {
 				return nil
 			})
 
-			if len(messages) > len(tt.result) {
-				t.Error("should return less messages")
-			}
-
-			if len(messages) < len(tt.result) {
-				t.Error("should return more messages")
+			if a, b := len(messages), len(tt.result); b == 0 && a != b {
+				t.Errorf("should expect no messages, instead got:\n%q", messages)
+			} else if a > b {
+				t.Errorf("should return less messages (got %d, expects %d)", a, b)
+			} else if a < b {
+				t.Errorf("should return more messages (got %d, expect %d)", a, b)
 			}
 
 			for i := range tt.result {
