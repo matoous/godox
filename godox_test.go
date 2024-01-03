@@ -9,9 +9,10 @@ import (
 	"testing"
 
 	"github.com/matoous/godox"
+	"github.com/matoous/godox/config"
 )
 
-//nolint // reason this is a unit test
+// nolint // reason this is a unit test
 func TestParse(t *testing.T) {
 	t.Parallel()
 
@@ -87,7 +88,80 @@ func TestParse(t *testing.T) {
 					panic(err)
 				}
 
-				res := godox.Run(f, fset)
+				goDoxSettings := config.GoDoxSettings{}
+				res := godox.Run(f, fset, &goDoxSettings)
+				messages = append(messages, res...)
+
+				return nil
+			})
+
+			a, b := len(messages), len(tt.result)
+
+			switch {
+			case b == 0 && a != b:
+				t.Errorf("should expect no messages, instead got:\n%q", messages)
+			case a > b:
+				t.Errorf("should return less messages (got %d, expects %d)", a, b)
+			case a < b:
+				t.Errorf("should return more messages (got %d, expect %d)", a, b)
+			}
+
+			for i := range tt.result {
+				if tt.result[i] != messages[i].Message {
+					t.Errorf("not equal\nexpected: %s\nactual: %s", tt.result[i], messages[i])
+				}
+			}
+		})
+	}
+}
+
+func TestFormat(t *testing.T) {
+	t.Parallel()
+
+	flag.Parse()
+
+	tests := []struct {
+		path         string
+		result       []string
+		includeTests bool
+	}{
+		{
+			path: "./fixtures/05",
+			result: []string{
+				"fixtures/05/example1.go:9: Line does not match the expected format: ^TODO\\([a-z]+\\)\\s+.+$, \"TODO This is a comment.\"",
+				"fixtures/05/example1.go:11: Line does not match the expected format: ^TODO\\([a-z]+\\)\\s+.+$, \"TODO Multi line 1\"",
+				"fixtures/05/example1.go:12: Line does not match the expected format: ^TODO\\([a-z]+\\)\\s+.+$, \"TODO Multi line 2\"",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt //nolint // reason tt is ok on this context
+		t.Run(tt.path, func(t *testing.T) {
+			t.Parallel()
+
+			var messages []godox.Message
+			_ = filepath.Walk(tt.path, func(path string, info os.FileInfo, _ error) error {
+				fset := token.NewFileSet()
+				if info.IsDir() {
+					return nil
+				}
+
+				f, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
+				if err != nil {
+					panic(err)
+				}
+
+				goDoxSettings := config.GoDoxSettings{
+					Format: true,
+					FormatRules: []config.GoDoxFormatRule{
+						{
+							Keyword:           "TODO",
+							RegularExpression: `^TODO\([a-z]+\)\s+.+$`,
+						},
+					},
+				}
+				res := godox.Run(f, fset, &goDoxSettings)
 				messages = append(messages, res...)
 
 				return nil
