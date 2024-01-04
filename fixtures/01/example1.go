@@ -3,9 +3,8 @@ package main
 
 import "fmt"
 
-// This comment is associated with the hello constant.x
-//
 //revive:disable
+// This comment is associated with the hello constant.x
 const hello = "Hello, World!" // line comment 1
 
 // This comment is associated with the foo variable.
