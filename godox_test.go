@@ -84,10 +84,13 @@ func TestParse(t *testing.T) {
 
 				f, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
 				if err != nil {
-					panic(err)
+					t.Fatal(err)
 				}
 
-				res := godox.Run(f, fset)
+				res, err := godox.Run(f, fset)
+				if err != nil {
+					t.Fatal(err)
+				}
 				messages = append(messages, res...)
 
 				return nil
