@@ -22,7 +22,7 @@ type Message struct {
 	Message string
 }
 
-func getMessages(comment *ast.Comment, fset *token.FileSet, keywords []string) []Message {
+func getMessages(comment *ast.Comment, fset *token.FileSet, keywords []string) ([]Message, error) {
 	commentText := extractComment(comment.Text)
 
 	scanner := bufio.NewScanner(bytes.NewBufferString(commentText))
@@ -65,7 +65,11 @@ func getMessages(comment *ast.Comment, fset *token.FileSet, keywords []string) [
 		}
 	}
 
-	return comments
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("scan: %w", err)
+	}
+
+	return comments, nil
 }
 
 func extractComment(commentText string) string {
@@ -96,7 +100,7 @@ func hasAlphanumRuneAdjacent(rest []byte) bool {
 
 // Run runs the godox linter on given file.
 // Godox searches for comments starting with given keywords and reports them.
-func Run(file *ast.File, fset *token.FileSet, keywords ...string) []Message {
+func Run(file *ast.File, fset *token.FileSet, keywords ...string) ([]Message, error) {
 	if len(keywords) == 0 {
 		keywords = defaultKeywords
 	}
@@ -105,9 +109,14 @@ func Run(file *ast.File, fset *token.FileSet, keywords ...string) []Message {
 
 	for _, c := range file.Comments {
 		for _, ci := range c.List {
-			messages = append(messages, getMessages(ci, fset, keywords)...)
+			msgs, err := getMessages(ci, fset, keywords)
+			if err != nil {
+				return nil, err
+			}
+
+			messages = append(messages, msgs...)
 		}
 	}
 
-	return messages
+	return messages, nil
 }
