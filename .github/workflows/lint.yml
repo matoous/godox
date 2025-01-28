@@ -3,20 +3,6 @@ name: Run linters
 on: [push, pull_request]
 
 jobs:
-  revive-lint:
-    name: Revive
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4
-
-      - name: Run Revive
-        uses: docker://morphy/revive-action:v2
-        with:
-          config: .revive.toml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   golang-ci-lint:
     name: GolangCI
     runs-on: ubuntu-latest

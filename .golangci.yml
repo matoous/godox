@@ -25,6 +25,98 @@ linters-settings:
     line-length: 140
   misspell:
     locale: US
+  revive:
+    ignore-generated-header: false
+    severity: warning
+    # confidence <= 0.2 generate a lot of errors from package-comments rule. It marks files that do not contain
+    # package-level comments as a warning irrespective of existing package-level comment in one file.
+    confidence: 0.25
+    rules:
+      # argument-limit rule is setting up a maximum number of parameters that can be passed to the functions/methods.
+      - name: argument-limit
+        arguments: [5]
+      # atomic rule checks for commonly mistaken usages of the sync/atomic package.
+      - name: atomic
+      # blank-imports rule disallows blank imports.
+      - name: blank-imports
+      # bool-literal-in-expr suggests removing boolean literals from logic expressions like `bar == true`, `arg == false`,
+      # `r != true`, `false && boolExpr` and `boolExpr || true`.
+      - name: bool-literal-in-expr
+      # constant-logical-expr rule warns on constant logical expressions, like `name == name`.
+      - name: constant-logical-expr
+      # context-as-argument rule makes sure that context.Context is the first argument of a function.
+      - name: context-as-argument
+      # context-keys-type rule disallows the usage of basic types in context.WithValue
+      - name: context-keys-type
+      # confusing-naming rule warns on methods with names that differ only by capitalization.
+      - name: confusing-naming
+      # confusing-results rule suggests to name potentially confusing function results.
+      - name: confusing-results
+      # cyclomatic rule sets restriction for maximum Cyclomatic complexity.
+      - name: cyclomatic
+        arguments: [15]
+      # deep-exit rule looks for program exits in funcs other than `main()` or `init()`.
+      - name: deep-exit
+      # dot-imports rule forbids `.` imports.
+      - name: dot-imports
+      # empty-block warns on empty code blocks.
+      - name: empty-block
+      # error-return rule ensure that the error return parameter is the last.
+      - name: error-return
+      # error-strings rule ensure conventions around error strings.
+      - name: error-strings
+      # error-naming rule ensure naming of error variables (has `Err` or `err` prefix).
+      - name: error-naming
+      # errorf rule warns on usage errors.New(fmt.Sprintf()) instead of fmt.Errorf()
+      - name: errorf
+      # exported rule ensure naming and commenting conventions on exported symbols.
+      - name: exported
+      # flag-parameter rule warns on boolean parameters that create a control coupling.
+      - name: flag-parameter
+      # get-return rule warns on getters that do not yield any result.
+      - name: get-return
+      # if-return rule warns redundant if when returning an error.
+      - name: if-return
+      # increment-decrement rule forces to use `i++` and `i--` instead of `i += 1` and `i -= 1`.
+      - name: increment-decrement
+      # indent-error-flow rule prevents redundant else statements.
+      - name: indent-error-flow
+      # modifies-value-receiver warns on assignments to value-passed method receivers.
+      - name: modifies-value-receiver
+      # package-comments rule ensures package commenting conventions.
+      - name: package-comments
+      # range rule prevents redundant variables when iterating over a collection.
+      - name: range
+      # range-val-in-closure warns if range value is used in a closure dispatched as goroutine.
+      - name: range-val-in-closure
+      # receiver-naming ensures conventions around the naming of receivers.
+      - name: receiver-naming
+      # redefines-builtin-id warns on redefinitions of built-in (constants, variables, function and types) identifiers,
+      # like `true := "false"` etc.
+      - name: redefines-builtin-id
+      # rule.superfluous-else prevents redundant else statements (extends indent-error-flow). Checks for `if-then-else`where
+      # the then block ends with branching statement like `continue`, `break`, or `goto`.
+      - name: superfluous-else
+      # rule.struct-tag checks common struct tags like `json`, `xml`, `yaml`.
+      - name: struct-tag
+      # time-naming rule conventions around the naming of time variables. Like not to use unit suffixes (sec, min etc.) in
+      # naming variables of type `time.Time` or `time.Duration`.
+      - name: time-naming
+      # unexported-return rule warns when a public return is from unexported type.
+      - name: unexported-return
+      # unnecessary-stmt  suggests removing or simplifying unnecessary statements like breaks at the end of cases or return at
+      # the end of bodies of functions returning nothing.
+      - name: unnecessary-stmt
+      # unreachable-code rule warns on the unreachable code.
+      - name: unreachable-code
+      # unused-parameter rule suggests to rename or remove unused function parameters.
+      - name: unused-parameter
+      # var-declaration rule reduces redundancies around variable declaration.
+      - name: var-declaration
+      # var-naming checks naming rules.
+      - name: var-naming
+      # waitgroup-by-value rule warns on functions taking `sync.WaitGroup` as a by-value parameter.
+      - name: waitgroup-by-value
 
 linters:
   enable-all: true
